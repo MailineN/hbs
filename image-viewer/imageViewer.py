@@ -9,9 +9,6 @@ conn = psycopg2.connect(database="hbs",
 
 cursor = conn.cursor()
 
-#cursor.execute("SELECT * FROM tbl_receipt_product")
-#print(cursor.fetchall())
-
 
 cursor.execute("SELECT sync_id,image FROM tbl_receipt_image")
 c = cursor.fetchall()
@@ -21,4 +18,3 @@ for row in c:
     cleaned = photo.lstrip("b'").rstrip("'")
     f.write(base64.b64decode(cleaned))
     f.close()
-#new_bin_data = bytearray(mview)
