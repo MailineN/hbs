@@ -41,4 +41,16 @@ To run the app : `flutter run` which may lead to error `path may not be null or 
 To solve that, comment out the block `signingConfigs` from `budget/app/android/app/build.gradle` L51 to 58 (https://gitlab.com/tabi/projects/budget/-/blob/master/app/android/app/build.gradle#L51) and uncomment `signingConfig signingConfigs.debug` (https://gitlab.com/tabi/projects/budget/-/blob/master/app/android/app/build.gradle#L62), comment the rest of the block L63 to 65 (https://gitlab.com/tabi/projects/budget/-/blob/master/app/android/app/build.gradle#L63).   
 Run `flutter run` again and ... voila
 
+Error :  
+```
+> A failure occurred while executing com.android.build.gradle.internal.tasks.CheckAarMetadataWorkAction
+   > The minCompileSdk (31) specified in a
+     dependency's AAR metadata (META-INF/com/android/build/gradle/aar-metadata.properties)
+     is greater than this module's compileSdkVersion (android-28).
+     Dependency: androidx.core:core:1.7.0.
+```
+to solve this, bump compileSdkVersion (https://gitlab.com/tabi/projects/budget/-/blob/master/app/android/app/build.gradle#L34) to 31.  
+Note that this leads to several scary warnings from camera plugin but still builds and runs. 
+
+
 
