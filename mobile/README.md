@@ -66,7 +66,7 @@ Si vous ne disposez pas d'appareil Android, vous pouvez passer par un émulateur
 
 
 ## Build et lancement l'application
-
+Aller sur la branche develop (`git checkout develop`)
 Dans `budget/app` : `flutter build bundle` devrait fonctionner correctement (on peut ignorer les divers warnings).
 Pour exécuter l'application : `flutter run`
 
