@@ -1,56 +1,74 @@
-# Mobile
+# Setup de l'appli 
 
-## Setup
+## Cloner le repo  
 
-1. Clone repos  
+`git clone https://gitlab.com/InseeFr/social-statistics/budget.git`  
 
-`git clone https://gitlab.com/tabi/projects/budget.git`  
 
-depends on https://gitlab.com/tabi/projects/packages/questionnaire which should be cloned also and it should be in `../../packages/questionnaire` relative to `budget/app` folder.  
+## Installation de flutter  
 
-`git clone https://gitlab.com/tabi/projects/packages/questionnaire.git`  
+Téléchargez Flutter depuis https://docs.flutter.dev/release/archive
+Actuellement,l'application utilise la version 3.10.6. Une mise à jour vers la dernière version est prévue avant les tests à plus grande échelle. 
 
-directory structure should look like this :  
+1. **Extraction du fichier zip :**
+   - Téléchargez le fichier zip de Flutter depuis [https://docs.flutter.dev/release/archive](https://docs.flutter.dev/release/archive).
+   - Extrayez le contenu du fichier zip.
 
+2. **Placement de Flutter dans l'emplacement d'installation souhaité :**
+   - Choisissez l'emplacement d'installation souhaité pour le SDK Flutter (par exemple, `%USERPROFILE%\flutter` ou `D:\dev\flutter`).
+   - Déplacez le contenu extrait de Flutter vers cet emplacement.
+
+Assurez-vous que l'emplacement d'installation choisi est accessible et que vous avez les autorisations nécessaires.
+
+3. **Mise à jour des variables d'environnement (si nécessaire) :**
+   - Ajoutez le chemin vers le répertoire `bin` de Flutter à votre variable d'environnement `PATH`.
+     - Exemple : Si Flutter est installé dans `%USERPROFILE%\flutter`, ajoutez `%USERPROFILE%\flutter\bin` à la variable d'environnement `PATH`.
+
+Vous devriez maintenant avoir Flutter correctement extrait et installé à l'emplacement de votre choix. Pour vérifier que tout est configuré correctement, vous pouvez exécuter la commande `flutter doctor`.
+    
+
+Vérifiez que Flutter fonctionne correctement : `flutter doctor`. Résolvez tout problème détecté par cette commande 
+
+## Configurer le périphérique Android
+Avant de pouvoir utiliser l'application, vous devez activer le mode développeur et le debogage USB sur l'appareil. Pour cela, accédez aux paramètres de l’appareil, puis dans « À propos du téléphone »  ou équivalent
+Tout en bas, tapotez 7 fois « numéro de build ».
+Un message vous indique que les options pour les développeurs sont apparues dans le menu « Système » des paramètres. 
+Le menu Options pour les développeurs apparaîtra dans la partie Système des Paramètres. Depuis ce menu, il vous sera possible d’accéder à différentes options notamment l’accès au débogage USB (il faudra surement défiler un moment avant de trouver l'option)
+
+Connectez un appareil Android avec le débogage USB activé ou utilisez un émulateur (voir plus bas). Exécutez `flutter devices` pour vérifier que le périphérique est bien reconnu.
+
+## Installer Android Studio
+Flutter dépend d'une installation d'Android Studio pour fournir les dépendances Android même si ce n'est pas nécessaire pour le développement
+
+Télécharger et installer [Android Studio](https://developer.android.com/studio). Normalement cela installera les dernières versions d'Android SDK, Android SDK Command-line Tools et Android SDK Build-Tools, nécessaires à Flutter.
+Pour Windows, il faudra également installer [Google USB Driver.](https://developer.android.com/studio/run/win-usb)
+
+Exécuter 'flutter doctor' pour confirmer la localisation d'Android Studio. Si Flutter ne peut pas le localiser, exécutez 
+```bash
+flutter config --android-studio-dir=<répertoire>` 
 ```
-budget
-  app  
-packages
-  questionnaire
+pour définir le répertoire où Android Studio est installé.
+
+Ouvrez un terminal exécutez la commande suivante pour accepter les licences Android.
+```bash
+flutter doctor --android-licenses 
 ```
 
-Budget and questionnaire have incompatible versions requirements since https://gitlab.com/tabi/projects/packages/questionnaire/-/commit/a26ff195a1bb3fc1757e739cbf2ea2497bc4b3f4 leading to error `Because every version of questionnaire from path depends on font_awesome_flutter ^9.1.0 and budget_onderzoek depends on font_awesome_flutter ^8.11.0, questionnaire from path is forbidden.`.  
-Quick fix is downgrading questionnaire to 787db612955a798f6f0380e226984930d3bbb418 (`git checkout 787db612955a798f6f0380e226984930d3bbb418`) 
+### Installer un simulateur Android
+Si vous ne disposez pas d'appareil Android, vous pouvez passer par un émulateur. Ce n'est pas conseillé car les émulateurs ne gèrent pas la caméra et utilisent les ressources du PC pour fonctionner. 
 
-2. Setup flutter  
+1. Lancer Android Studio et ouvrir le projet (`budget/app`), cliquer sur l'icône Gestionnaire de périphériques, et sélectionner Créer un périphérique sous l'onglet Gestionnaire de périphériques... Sélectionnez "Créer un périphérique"
+2. Choisir un type d'appareil et sélectionner Suivant
+3. Sélectionner une ou plusieurs SDK pour les versions d'Android que vous souhaitez émuler, puis cliquer sur Suivant
+4. Sous Emulated Performance, sélectionner Hardware - GLES 2.0 pour activer l'accélération matérielle
+5. Vérifier que la configuration de l'émulateur, puis cliquer sur Terminer
+6. Dans le Gestionnaire de périphériques virtuels Android, cliquer sur Lancer dans la barre d'outils
 
-Download flutter from https://docs.flutter.dev/release/archive  
-Currently latest working version is 2.8.1 (12/16/2021 !) due to a file (https://gitlab.com/tabi/projects/budget/-/blob/master/app/lib/features/menu/menu.dart#L316) in budget being incompatible with https://github.com/flutter/flutter/commit/0a2227c286568674fb72106f277d3b04a5ac75c5 changes
 
-Check flutter is ok : flutter doctor`. Solve any issue detected by this command (likely : install Android SDK).  
+## Build et lancement l'application
 
-3. Setup android device  
-
-Connect an Android device with USB debugging enabled or an emulator.  
-Run `flutter devices` to check that device is set up.  
-
-4. Build / run the app
-
-In `budget/app`  : `flutter build bundle` should run fine.  
-To run the app : `flutter run` which may lead to error `path may not be null or empty string. path='null'`.  
-To solve that, comment out the block `signingConfigs` from `budget/app/android/app/build.gradle` L51 to 58 (https://gitlab.com/tabi/projects/budget/-/blob/master/app/android/app/build.gradle#L51) and uncomment `signingConfig signingConfigs.debug` (https://gitlab.com/tabi/projects/budget/-/blob/master/app/android/app/build.gradle#L62), comment the rest of the block L63 to 65 (https://gitlab.com/tabi/projects/budget/-/blob/master/app/android/app/build.gradle#L63).   
-Run `flutter run` again and ... voila
-
-Error :  
-```
-> A failure occurred while executing com.android.build.gradle.internal.tasks.CheckAarMetadataWorkAction
-   > The minCompileSdk (31) specified in a
-     dependency's AAR metadata (META-INF/com/android/build/gradle/aar-metadata.properties)
-     is greater than this module's compileSdkVersion (android-28).
-     Dependency: androidx.core:core:1.7.0.
-```
-to solve this, bump compileSdkVersion (https://gitlab.com/tabi/projects/budget/-/blob/master/app/android/app/build.gradle#L34) to 31.  
-Note that this leads to several scary warnings from camera plugin but still builds and runs. 
+Dans `budget/app` : `flutter build bundle` devrait fonctionner correctement (on peut ignorer les divers warnings).
+Pour exécuter l'application : `flutter run`
 
 
 
